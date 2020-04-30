@@ -18,6 +18,7 @@ function scrapePhoneNum(el){
 Call `scrapePhoneNum($0)` from Chrome console on the membercard
 
 ### Unit Test Name
+```
 function scrapeName(el){
     var expectedName;
     expectedName = el.firstChild.firstChild.childNodes[1].childNodes[1].childNodes[1].querySelector('span').innerText;
@@ -26,8 +27,5 @@ function scrapeName(el){
     }
     return expectedName;
 }
+```
 Call `scrapeName($0)` from Chrome console on the membercard
-```
-
-
-```
