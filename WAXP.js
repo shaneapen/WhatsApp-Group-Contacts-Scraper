@@ -147,7 +147,9 @@ WAXP = (function(){
             data = "Name,Phone,Status\n";
 
         for (key in MEMBERS_QUEUE) {
-            data += `"${MEMBERS_QUEUE[key][0]}","${key}","${MEMBERS_QUEUE[key][1]}"\n`;
+            // Wrapping each variable around double quotes to prevent commas in the string from adding new cols in CSV
+            // replacing any double quotes within the text to single quotes
+            data += `"${MEMBERS_QUEUE[key][0]}","${key}","${MEMBERS_QUEUE[key][1].replace(/\"/g,"'")}"\n`;
         }
         var a = document.createElement('a');
         a.style.display = "none";
