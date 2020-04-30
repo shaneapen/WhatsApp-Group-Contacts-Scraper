@@ -1,14 +1,14 @@
 /*
     Written by Shan Eapen Koshy
     Date: 14 March 2020
+    Last Modified: 30 April 2020
 
     Instructions
-
     1. Open WhatsApp Web and open any group chat
     2. click group name and SCROLL TO THE BOTTOM OF THE MEMBERS LIST
     3. Copy-paste the script in the console
 
-    NOTES
+    ** NOTES
     This script uses the latest ECMA Script 2020 optional chaining..updating browser to the latest version maybe required
 
 */
@@ -22,7 +22,7 @@ WAXP = (function(){
     
     MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
-    var SCROLL_INTERVAL_CONSTANT = 3000, SCROLL_INCREMENT = 400, MEMBERS_QUEUE = {}, AUTO_SCROLL = false, TOTAL_MEMBERS;
+    var SCROLL_INTERVAL_CONSTANT = 3000, SCROLL_INCREMENT = 140, MEMBERS_QUEUE = {}, AUTO_SCROLL = false, TOTAL_MEMBERS;
 
     var membersList = document.querySelectorAll('span[title=You]')[0]?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode;
     var scrollInterval, observer;
@@ -32,9 +32,8 @@ WAXP = (function(){
     console.log("%c WhatsApp Group Contacts Exporter ","font-size:24px;font-weight:bold;color:white;background:green;");
 
     var start = function(){
-        observer = new MutationObserver(function (mutations, observer) {
-            // fired when a mutation occurs   
-            scrapeData();
+        observer = new MutationObserver(function (mutations, observer) {   
+            scrapeData(); // fired when a mutation occurs
         });
     
         // the div to watch for mutations
@@ -44,7 +43,7 @@ WAXP = (function(){
         });
 
         TOTAL_MEMBERS = membersList.parentElement.parentElement.querySelector('span').innerText.match(/\d+/)[0]*1;
-    
+
         //scroll to top before beginning
         header.nextSibling.scrollTop = 0;
        
@@ -61,14 +60,19 @@ WAXP = (function(){
 
     
     /**
-     * Function to autoscroll the div
+     * @description Function to autoscroll the div
      */
+
     var autoScroll = function (){
         if(header.nextSibling.scrollTop + 59 < height) 
             header.nextSibling.scrollTop += SCROLL_INCREMENT;
         else
             stop()
     };
+
+    /**
+     * @description Stops the current WAXP instance
+     */
 
     var stop = function(){
         window.clearInterval(scrollInterval);
@@ -77,7 +81,7 @@ WAXP = (function(){
     }
 
     /**
-     * Function to scrape member data
+     * @description Function to scrape member data
      */
     var scrapeData = function () {
         var phone, status, name;
@@ -85,35 +89,11 @@ WAXP = (function(){
 
         for (let i = 0; i < memberCard.length; i++) {
 
-            // STATUS
-            status = memberCard[i].querySelectorAll('span[title]')[1] ? memberCard[i].querySelectorAll('span[title]')[1].title : "NIL";
+            status = memberCard[i].querySelectorAll('span[title]')[1] ? memberCard[i].querySelectorAll('span[title]')[1].title : "";
+            phone = scrapePhoneNum(memberCard[i]);
+            name = scrapeName(memberCard[i]);
 
-            // PHONE
-            if (memberCard[i].querySelector('img')) {
-                phone = memberCard[i].querySelector('img').src;
-                phone = phone.match(/u=[0-9]*/) ? phone.match(/u=[0-9]*/)[0].substring(2).replace(/[+\s]/g, '') : "NIL";
-            } else {
-                //no image instead placeholder SVG is shown [happens when the contact info is not saved]
-                var s = memberCard[i].querySelector('span[data-icon="default-user"]');
-                name = s ? (s ?.parentNode?.parentNode?.parentNode?.nextSibling.querySelector('span[title]').title) : "NIL";
-            }
-
-            // NAME
-            if (memberCard[i].querySelector('span[title]')) {
-                name = memberCard[i].querySelector('span[title]').getAttribute('title');
-                /**
-                 * Phone number shown in place of name when contact is not saved
-                 */
-                if (name.match(/(.?)*[0-9]{3}$/)) {
-                    phone = name.match(/(.?)*[0-9]{3}$/)[0].replace(/[+\s]/g, '');
-                    name = memberCard[i].firstChild.firstChild.childNodes[1].childNodes[1].querySelector('span[dir=auto]')?.innerText;
-                }
-            } else {
-                name = "NIL";
-            }
-
-            // Push the phone to queue only if the phone num is valid and if not already present in queue
-            if (phone.match(/\d+/) && !MEMBERS_QUEUE[phone]) {
+            if (phone!='NIL' && !MEMBERS_QUEUE[phone]) {
                 MEMBERS_QUEUE[phone] = [name, status];
             }
 
@@ -121,12 +101,42 @@ WAXP = (function(){
         }
     }
 
+    /**
+     * @description scrapes phone no from html node
+     * @param {object} el - HTML node
+     * @returns {string} - phone number without special chars
+     */
+
+    var scrapePhoneNum = function(el){
+        var phone;
+        if (el.querySelector('img') && el.querySelector('img').src.match(/u=[0-9]*/)) {
+           phone = el.querySelector('img').src.match(/u=[0-9]*/)[0].substring(2).replace(/[+\s]/g, '');
+        } else {
+           var temp = el.querySelector('span[title]').getAttribute('title').match(/(.?)*[0-9]{3}$/);
+           phone = temp ? temp[0].replace(/\D/g,'') : 'NIL';
+        }
+        return phone;
+    }
+    
+    /**
+     * @description Scrapes name from HTML node
+     * @param {object} el - HTML node
+     * @returns {string} - returns name..if no name is present phone number is returned
+     */
+
+    var scrapeName = function (el){
+        var expectedName;
+        expectedName = el.firstChild.firstChild.childNodes[1].childNodes[1].childNodes[1].querySelector('span').innerText;
+        if(expectedName == ""){
+            return el.querySelector('span[title]').getAttribute('title');
+        }
+        return expectedName;
+    }
+
 
     /**
-     * A utility function to download the result as CSV file
-     * @params <none>
-     * 
-     * References
+     * @description A utility function to download the result as CSV file
+     * @References
      * [1] - https://stackoverflow.com/questions/4617935/is-there-a-way-to-include-commas-in-csv-columns-without-breaking-the-formatting
      * 
      */
@@ -137,7 +147,7 @@ WAXP = (function(){
             data = "Name,Phone,Status\n";
 
         for (key in MEMBERS_QUEUE) {
-            data += `"${MEMBERS_QUEUE[key][0]}","${key}","${MEMBERS_QUEUE[key][1]}"\n`; //[1]
+            data += `"${MEMBERS_QUEUE[key][0]}","${key}","${MEMBERS_QUEUE[key][1]}"\n`;
         }
         var a = document.createElement('a');
         a.style.display = "none";
@@ -154,8 +164,7 @@ WAXP = (function(){
     }
 
     /**
-     * Debug function 
-     * @params <none>
+     * @description Debug function 
      * @returns { size, MEMBERS_QUEUE }
      */
 
@@ -188,7 +197,7 @@ WAXP = (function(){
                 }else{
                     console.log('Invalid options..starting with default options..')
                 }
-                start() //calling the private fn
+                start()
             },
             stop: function(){
                 stop()
