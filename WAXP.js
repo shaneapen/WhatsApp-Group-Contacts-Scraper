@@ -1,25 +1,8 @@
 /*
     Written by Shan Eapen Koshy
     Date: 14 March 2020
-    Last Modified: 30 April 2020
-
-    Instructions
-    1. Open WhatsApp Web and open any group chat
-    2. click group name and SCROLL TO THE BOTTOM OF THE MEMBERS LIST
-    3. Copy-paste the script in the console
-
-    ** NOTES
-    This script uses the latest ECMA Script 2020 optional chaining..updating browser to the latest version maybe required
-
-    TO DO
-    Show the number of contacts whose phone number were not available..optionally push their details to the sheet
-
 */
 
-/**
- * @params <none>
- * @returns { downloadAsCSV(), start(), stop(), debug() }
- */
 
 WAXP = (function(){
     
@@ -28,7 +11,7 @@ WAXP = (function(){
     var SCROLL_INTERVAL_CONSTANT = 3000, 
         SCROLL_INCREMENT = 450, 
         AUTO_SCROLL = true, 
-        MEMBERS_QUEUE = {}, 
+        MEMBERS_QUEUE = {},
         TOTAL_MEMBERS;
 
     var scrollInterval, observer, membersList, header;
@@ -81,7 +64,7 @@ WAXP = (function(){
     };
 
     /**
-     * @description Stops the current WAXP instance
+     * @description Stops the current scrape instance
      */
 
     var stop = function(){
