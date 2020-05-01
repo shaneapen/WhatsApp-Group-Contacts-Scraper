@@ -22,7 +22,11 @@ WAXP = (function(){
     
     MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
-    var SCROLL_INTERVAL_CONSTANT = 3000, SCROLL_INCREMENT = 140, MEMBERS_QUEUE = {}, AUTO_SCROLL = false, TOTAL_MEMBERS;
+    var SCROLL_INTERVAL_CONSTANT = 3000, 
+        SCROLL_INCREMENT = 450, 
+        AUTO_SCROLL = true, 
+        MEMBERS_QUEUE = {}, 
+        TOTAL_MEMBERS;
 
     var membersList = document.querySelectorAll('span[title=You]')[0]?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode;
     var scrollInterval, observer;
@@ -43,17 +47,14 @@ WAXP = (function(){
         });
 
         TOTAL_MEMBERS = membersList.parentElement.parentElement.querySelector('span').innerText.match(/\d+/)[0]*1;
+        
+        // click the `n more` button to show all members
+        document.querySelector("span[data-icon=down]")?.click()
 
         //scroll to top before beginning
-        header.nextSibling.scrollTop = 0;
-       
-        //FOR DEBUGGING
-        // console.log({
-        //     'SCROLL_INTERVAL_CONSTANT': SCROLL_INTERVAL_CONSTANT,
-        //     'SCROLL_INCREMENT': SCROLL_INCREMENT,
-        //     'AUTO_SCROLL': AUTO_SCROLL,
-        //     'TOTAL_MEMBERS': TOTAL_MEMBERS
-        // });
+        header.nextSibling.scrollTop = 100;
+        scrapeData();
+        console.log("%cExtraction started..%c ",'font-size:25px;',  'font-size:25px;background:url(https://i.gifer.com/ZlXo.gif) no-repeat; background-size:contain;display:flex;vertical-align:text-top');
 
         if(AUTO_SCROLL) scrollInterval = setInterval(autoScroll, SCROLL_INTERVAL_CONSTANT);    
     }
@@ -64,10 +65,11 @@ WAXP = (function(){
      */
 
     var autoScroll = function (){
-        if(header.nextSibling.scrollTop + 59 < height) 
+        //header.nextSibling.scrollTop < height
+        if(!utils.scrollEndReached(header.nextSibling)) 
             header.nextSibling.scrollTop += SCROLL_INCREMENT;
         else
-            stop()
+            stop();
     };
 
     /**
@@ -77,7 +79,8 @@ WAXP = (function(){
     var stop = function(){
         window.clearInterval(scrollInterval);
         observer.disconnect();
-        console.log("Extraction Completed..")
+        console.log(`%c Extracted [${debug().size} / ${TOTAL_MEMBERS}] Members. Starting Download..`,`font-size:13px;color:white;background:green;border-radius:10px;`)
+        downloadAsCSV()
     }
 
     /**
@@ -97,7 +100,12 @@ WAXP = (function(){
                 MEMBERS_QUEUE[phone] = [name, status];
             }
 
-            console.log(`%c Extracted [${debug().size} / ${TOTAL_MEMBERS}] Members `,`font-size:13px;color:white;background:green;border-radius:10px;`)
+            if(debug().size >= TOTAL_MEMBERS) {
+                stop();
+                break;
+            }
+                
+            //console.log(`%c Extracted [${debug().size} / ${TOTAL_MEMBERS}] Members `,`font-size:13px;color:white;background:green;border-radius:10px;`)
         }
     }
 
@@ -166,20 +174,45 @@ WAXP = (function(){
     }
 
     /**
+     * @description Helper functions
+     * @references [1] https://stackoverflow.com/questions/53158796/get-scroll-position-with-reactjs/53158893#53158893
+     */
+
+    var utils = (function(){
+
+        return {
+           scrollEndReached: function(el){
+               if((el.scrollHeight - (el.clientHeight + el.scrollTop)) == 0)
+                    return true;
+                return false;
+           }
+        }
+    })();
+
+    /**
      * @description Debug function 
      * @returns { size, MEMBERS_QUEUE }
      */
 
     var debug = function () {
-        var size = 0,
-            key;
+        var size = 0,  key;
+        
         for (key in MEMBERS_QUEUE) {
             if (MEMBERS_QUEUE.hasOwnProperty(key)) size++;
         }
         
         return {
             size: size,
-            q: MEMBERS_QUEUE
+            q: MEMBERS_QUEUE,
+            globals: function(){
+                // Show the current global variables
+              console.log({
+                'SCROLL_INTERVAL_CONSTANT': SCROLL_INTERVAL_CONSTANT,
+                'SCROLL_INCREMENT': SCROLL_INCREMENT,
+                'AUTO_SCROLL': AUTO_SCROLL,
+                'TOTAL_MEMBERS': TOTAL_MEMBERS
+                });
+            }
         }
     }
 
@@ -204,9 +237,10 @@ WAXP = (function(){
             stop: function(){
                 stop()
             },
-            resume: function(){
+            resumeManually: function(){
                 //resume starts without resetting the MEMBERS_QUEUE
-                start()
+                AUTO_SCROLL = false;
+                start();
             },
             downloadCSV: function(){
                 downloadAsCSV()

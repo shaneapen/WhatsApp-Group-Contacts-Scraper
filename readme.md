@@ -1,4 +1,4 @@
-## WAXP - WhatsAPP Group Contact Exporter
+## WAXP - WhatsApp Group Contact Exporter
 
 ### Unit Test Phone
 
