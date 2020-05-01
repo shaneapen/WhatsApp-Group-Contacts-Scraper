@@ -11,6 +11,10 @@
     ** NOTES
     This script uses the latest ECMA Script 2020 optional chaining..updating browser to the latest version maybe required
 
+    TO DO
+    Show the number of contacts whose phone number were not available..optionally push their details to the sheet
+    Save sheet with group name
+
 */
 
 /**
@@ -28,13 +32,21 @@ WAXP = (function(){
         MEMBERS_QUEUE = {}, 
         TOTAL_MEMBERS;
 
-    var membersList = document.querySelectorAll('span[title=You]')[0]?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode;
-    var scrollInterval, observer;
-    let header = document.getElementsByTagName('header')[0];
+    var scrollInterval, observer, membersList, header;
 
     console.log("%c WhatsApp Group Contacts Exporter ","font-size:24px;font-weight:bold;color:white;background:green;");
 
     var start = function(){
+        
+        membersList = document.querySelectorAll('span[title=You]')[0]?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode;
+        header = document.getElementsByTagName('header')[0];
+
+        if(!membersList){
+            document.querySelector("#main > header").firstChild.click();
+            membersList = document.querySelectorAll('span[title=You]')[0]?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode;
+            header = document.getElementsByTagName('header')[0];
+        }
+
         observer = new MutationObserver(function (mutations, observer) {   
             scrapeData(); // fired when a mutation occurs
         });
