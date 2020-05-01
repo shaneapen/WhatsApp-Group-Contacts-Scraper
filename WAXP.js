@@ -13,7 +13,6 @@
 
     TO DO
     Show the number of contacts whose phone number were not available..optionally push their details to the sheet
-    Save sheet with group name
 
 */
 
@@ -159,9 +158,10 @@ WAXP = (function(){
      */
     var downloadAsCSV = function () {
 
-        var name = "member-details.csv",
-            type = "data:attachment/text",
-            data = "Name,Phone,Status\n";
+        var groupName = document.querySelectorAll("#main > header span")[1].title;
+        var fileName = groupName.replace(/[^\d\w\s]/g,'') ? groupName.replace(/[^\d\w\s]/g,'') : 'WAXP-group-members';
+
+        var name = `${fileName}.csv`, data = "Name,Phone,Status\n";
 
         for (key in MEMBERS_QUEUE) {
             // Wrapping each variable around double quotes to prevent commas in the string from adding new cols in CSV
@@ -172,7 +172,7 @@ WAXP = (function(){
         a.style.display = "none";
 
         var url = window.URL.createObjectURL(new Blob([data], {
-            type: type
+            type: "data:attachment/text"
         }));
         a.setAttribute("href", url);
         a.setAttribute("download", name);
