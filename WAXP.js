@@ -31,7 +31,6 @@ WAXP = (function(){
     var membersList = document.querySelectorAll('span[title=You]')[0]?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode;
     var scrollInterval, observer;
     let header = document.getElementsByTagName('header')[0];
-    let height = header.nextSibling.scrollHeight;
 
     console.log("%c WhatsApp Group Contacts Exporter ","font-size:24px;font-weight:bold;color:white;background:green;");
 
@@ -54,7 +53,6 @@ WAXP = (function(){
         //scroll to top before beginning
         header.nextSibling.scrollTop = 100;
         scrapeData();
-        console.log("%cExtraction started..%c ",'font-size:25px;',  'font-size:25px;background:url(https://i.gifer.com/ZlXo.gif) no-repeat; background-size:contain;display:flex;vertical-align:text-top');
 
         if(AUTO_SCROLL) scrollInterval = setInterval(autoScroll, SCROLL_INTERVAL_CONSTANT);    
     }
@@ -65,7 +63,6 @@ WAXP = (function(){
      */
 
     var autoScroll = function (){
-        //header.nextSibling.scrollTop < height
         if(!utils.scrollEndReached(header.nextSibling)) 
             header.nextSibling.scrollTop += SCROLL_INCREMENT;
         else
@@ -79,7 +76,7 @@ WAXP = (function(){
     var stop = function(){
         window.clearInterval(scrollInterval);
         observer.disconnect();
-        console.log(`%c Extracted [${debug().size} / ${TOTAL_MEMBERS}] Members. Starting Download..`,`font-size:13px;color:white;background:green;border-radius:10px;`)
+        console.log(`%c Extracted [${utils.queueLength()} / ${TOTAL_MEMBERS}] Members. Starting Download..`,`font-size:13px;color:white;background:green;border-radius:10px;`)
         downloadAsCSV()
     }
 
@@ -100,12 +97,12 @@ WAXP = (function(){
                 MEMBERS_QUEUE[phone] = [name, status];
             }
 
-            if(debug().size >= TOTAL_MEMBERS) {
+            if(utils.queueLength() >= TOTAL_MEMBERS) {
                 stop();
                 break;
             }
                 
-            //console.log(`%c Extracted [${debug().size} / ${TOTAL_MEMBERS}] Members `,`font-size:13px;color:white;background:green;border-radius:10px;`)
+            //console.log(`%c Extracted [${utils.queueLength()} / ${TOTAL_MEMBERS}] Members `,`font-size:13px;color:white;background:green;border-radius:10px;`)
         }
     }
 
@@ -185,36 +182,16 @@ WAXP = (function(){
                if((el.scrollHeight - (el.clientHeight + el.scrollTop)) == 0)
                     return true;
                 return false;
+           },
+           queueLength: function () {
+               var size = 0, key;
+               for (key in MEMBERS_QUEUE) {
+                   if (MEMBERS_QUEUE.hasOwnProperty(key)) size++;
+               }
+               return size;
            }
         }
     })();
-
-    /**
-     * @description Debug function 
-     * @returns { size, MEMBERS_QUEUE }
-     */
-
-    var debug = function () {
-        var size = 0,  key;
-        
-        for (key in MEMBERS_QUEUE) {
-            if (MEMBERS_QUEUE.hasOwnProperty(key)) size++;
-        }
-        
-        return {
-            size: size,
-            q: MEMBERS_QUEUE,
-            globals: function(){
-                // Show the current global variables
-              console.log({
-                'SCROLL_INTERVAL_CONSTANT': SCROLL_INTERVAL_CONSTANT,
-                'SCROLL_INCREMENT': SCROLL_INCREMENT,
-                'AUTO_SCROLL': AUTO_SCROLL,
-                'TOTAL_MEMBERS': TOTAL_MEMBERS
-                });
-            }
-        }
-    }
 
    
     // Defines the WAXP interface following module pattern
@@ -223,14 +200,15 @@ WAXP = (function(){
                 MEMBERS_QUEUE = {}; //reset
               
                 if(config == undefined){
-                    console.log('Starting with default options..');
+                    console.log("%cExtraction started with default options..%c ",'font-size:20px;',  'font-size:25px;background:url(https://i.gifer.com/ZlXo.gif) no-repeat; background-size:contain;display:flex;vertical-align:text-top');
                 }else if (typeof config == 'object'){
                     // didn't use ternary op since the else part isn't used
                     if(config.AUTO_SCROLL != undefined) AUTO_SCROLL = config.AUTO_SCROLL;
                     if(config.SCROLL_INCREMENT != undefined) SCROLL_INCREMENT = config.SCROLL_INCREMENT;
                     if(config.SCROLL_INTERVAL_CONSTANT != undefined) SCROLL_INTERVAL_CONSTANT = config.SCROLL_INTERVAL_CONSTANT;
+                    console.log("%cExtraction started with given options..%c ",'font-size:20px;',  'font-size:25px;background:url(https://i.gifer.com/ZlXo.gif) no-repeat; background-size:contain;display:flex;vertical-align:text-top');
                 }else{
-                    console.log('Invalid options..starting with default options..')
+                    console.log("%cInvalid options..Extraction started with default options instead..%c ",'font-size:20px;',  'font-size:25px;background:url(https://i.gifer.com/ZlXo.gif) no-repeat; background-size:contain;display:flex;vertical-align:text-top');
                 }
                 start()
             },
@@ -245,8 +223,20 @@ WAXP = (function(){
             downloadCSV: function(){
                 downloadAsCSV()
             },
-            debug: function () {
-                debug()
+            debug: function(){
+                return {
+                    size: utils.queueLength(),
+                    q: MEMBERS_QUEUE,
+                    globals: function(){
+                        // Show the current global variables
+                      console.log({
+                        'SCROLL_INTERVAL_CONSTANT': SCROLL_INTERVAL_CONSTANT,
+                        'SCROLL_INCREMENT': SCROLL_INCREMENT,
+                        'AUTO_SCROLL': AUTO_SCROLL,
+                        'TOTAL_MEMBERS': TOTAL_MEMBERS
+                        });
+                    }
+                }
             }
     }
 })();
