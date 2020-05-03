@@ -1,0 +1,43 @@
+html, body {
+   min-width: 300px;
+   min-height: 240px;
+}
+h1{
+    font-weight: bold;
+}
+.center{
+    margin: 0 auto;
+    text-align: center;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    background: #b7cbf1;
+    border: 0;
+    border-radius: 5px;
+    font-size: 15px;
+    display: block;
+    cursor: pointer;
+    outline: 0;
+}
+
+button:hover {
+    background: #89aff7;
+}
+button.link {
+    color:#700;
+    font-weight: bold;
+    background: none;
+}
+
+.selectedGroupWrapper{
+    background: #ddf3dd;
+    text-align: center;
+    padding: 5px;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+p#selectedGroup{
+    font-size: 14px;
+    font-weight: 700;
+}

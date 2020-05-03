@@ -3,6 +3,26 @@
     Date: 14 March 2020
 */
 
+chrome.runtime.onMessage.addListener(
+    function(message, sender, sendResponse) {
+        switch(message.type) {
+            case "startDefault":
+                function start(){
+                    try {
+                        WAXP.start();
+                    } catch (error) {
+                        console.log(error,'\nRETRYING in 1 second')
+                        setTimeout(start, 1000);
+                    }
+                }
+                start()
+            case "currentGroup":
+                if(document.querySelectorAll("#main > header span")[1].title) sendResponse(document.querySelectorAll("#main > header span")[1].title);
+                else sendResponse('');
+            break;
+        }
+    }
+);
 
 WAXP = (function(){
     

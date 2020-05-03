@@ -1,0 +1,20 @@
+{
+   "name": "WAXP",
+   "version": "0.1",
+   "manifest_version": 2,
+   "description": "Export contacts from WhatsApp groups",
+   "homepage_url": "https://codegena.com",
+   "icons": { "128": "/image/WA.png"},
+   "browser_action": {
+     "default_icon": "/image/WA.png",
+     "default_title": "WAXP",
+     "default_popup": "popup.html"
+   },
+   "content_scripts": [
+      {
+         "matches": ["*://web.whatsapp.com/"],
+         "js": ["/js/WAXP.js"]
+      }
+   ],
+   "permissions" : ["tabs"]
+ }

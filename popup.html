@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style/popup.css">
+</head>
+
+<body>
+  <h1 class="center">WAXP</h1>
+  <ol>
+    <li>Go to https://web.whatsapp.com</li>
+    <li>Select the group from which you want to export contacts.</li>
+    <li>Click Export</li>
+  </ol>
+  <div class="selectedGroupWrapper">
+    <label for="selectedGroup">Selected Group: </label>
+    <p class="center" id="selectedGroup" style="display: inline;"></p>
+  </div>
+  <button class="center" id="WAXP_EXPORT" disabled title="Export Contacts as CSV">Export Contacts</button>
+  <button class="center link" id="stopButton">Stop</button>
+  <p class="center" style="color:green;">Note: Export may take a while!</p>
+  <br>
+  <h4 class="center">More Options</h4>
+  <br>
+  <label for="autoScroll">AutoScroll</label>
+  <input type="checkbox" id="autoScroll">
+
+  <label for="scrollInterval">Scroll Interval</label>
+  <input type="number" id="scrollInterval">
+
+  <script src="/js/popup.js"></script>
+</body>
+
+</html>
