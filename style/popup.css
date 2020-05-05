@@ -1,17 +1,19 @@
 html, body {
-    min-width: 300px;
+    min-width: 350px;
     min-height: 240px;
     margin: 0;
     padding: 0;
 }
 h1{
     font-weight: bold;
+    font-family: 'Open Sans', sans-serif;
 }
 .center{
     margin: 0 auto;
     text-align: center;
 }
 button {
+    max-width: 250px;
     width: 100%;
     padding: 10px;
     background: #004D40;
@@ -25,13 +27,17 @@ button {
     outline: 0;
 }
 
-button:hover {
+button:hover, button:disabled {
     background: #6f7776;
 }
+
+button:disabled::before {
+    content: '🚫';
+}
+
 button.stop {
     color: #e63c39;
     font-weight: bold;
-    /* border: 2px solid #e6e6e6; */
     display: block;
     padding: 5px 20px;
     margin-top: 5px;
@@ -57,7 +63,7 @@ p#selectedGroup{
 .container {
     padding: 8px;
 }
-.block1 {
+.greenBlock {
     background: #1D9C5B;
     color: white;
     font-size: 14px;
@@ -72,8 +78,9 @@ fieldset legend {
     font-weight: bold;
 }
 select {
+    max-width: 250px;
     display: block;
-    margin: 10px 0;
+    margin: 10px auto;
     height: 30px;
     width: 100%;
     font-weight: 600;
@@ -91,5 +98,52 @@ img.gear-icon:hover {
     opacity: 0.9;
 }
 .hidden {
-    display: none;
+    display: none!important;
+}
+.tab-group {
+    display: table;
+    margin: 0 auto;
+    background: #E8F5E9;
+    padding: 3px;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+button.tab {
+    background: none;
+    color: black;
+    width: auto;
+    display: inline-block;
+    margin: 1px;
+    font-size: 11px;
+    padding: 5px 10px;
+}
+button.tab.active {
+    background: #dadedc82;
+    color: #279B5D;
+    font-weight: bold;
+}
+
+/* About page */
+.about p {
+    max-width: 80%;
+    margin: 0 auto;
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
+.page2 ol li {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* href tags */
+
+a {
+    text-decoration: none;
+    color: black;
+}
+a:hover {
+    color: black;
+    border-bottom: 2px solid #279B5D;
+    box-shadow: inset 0px -6px 0px 0px #279b5d3b;
 }

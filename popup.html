@@ -5,53 +5,110 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style/popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@600;700&display=swap" rel="stylesheet">
 </head>
 
 <body>
-  <div class="container block1">
+  <div class="container greenBlock">
     <h1 class="center" title="WhatsApp Group Contacts Exporter">WAXP</h1>
-    <img src="https://t7.rbxcdn.com/76a324c42b8c550ed93b7a27b7459dac" class=gear-icon id=gearIcon width=30 height=30 alt="">
-    <ol>
-      <li id=ol_step1>Go to https://web.whatsapp.com</li>
-      <li>Select the group from which you want to export contacts.</li>
-      <li>Click Export</li>
-    </ol>
-    <p class="center" style="color:white;font-weight: bold;">Note: Export may take a while!</p>
-  </div>
-  <div style="height: 40px; overflow: hidden;">
-    <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;">
-      <path d="M0.00,92.27 C216.83,192.92 304.30,8.39 500.00,109.03 L500.00,0.00 L0.00,0.00 Z"
-        style="stroke: none;fill: #1D9C5B;"></path>
-    </svg>
-  </div>
-
-  <div class="container">
-    <div class="selectedGroupWrapper">
-      <label for="groupName">Selected Group: </label>
-      <p class="center" id="groupName" style="display: inline-block;"></p>
+    <div class="tab-group">
+      <button id=page1 class="active tab">Home</button>
+      <button id=page2 class="tab">Troubleshoot</button>
+      <button id=page3 class="tab">About</button>
     </div>
-    <select name="exportType" id="exportType">
-      <option value="instant-export-unknown-numbers">Export Unknown Numbers Only (Instant)</option>
-      <option value="export-all-with-probable-names">Export All Contacts with Names (Slow)</option>
-    </select>
-    <button class="center" id="WAXP_EXPORT" disabled title="Export Contacts as CSV">Export Contacts</button>
-    <button class="center stop" id="stopButton">Stop Exporting</button>
-    <br>
-    <fieldset class="hidden">
-      <legend>More Options</legend>
-      <label for="autoScroll">AutoScroll</label>
-      <input type="checkbox" id="autoScroll" checked>
-      <br>
-      <label for="scrollInterval">Scroll Interval</label>
-      <input type="number" id="scrollInterval" placeholder="3000" step="500" min="500">
-      <br>
-      <label for="scrollInterval">Scroll Increment</label>
-      <input type="number" id="scrollInterval" placeholder="400" step="50" min="100" max="1000">
-    </fieldset>
-
-    <footer><p>Doesn't Work?</p></footer>
-
   </div>
+
+  <!-- PAGE 1 Start -->
+  <div id="page1Content">
+    <img src="https://t7.rbxcdn.com/76a324c42b8c550ed93b7a27b7459dac" class=gear-icon id=gearIcon width=30 height=30>
+    <div class="container greenBlock">
+      <ol>
+        <li id=ol_step1>Go to https://web.whatsapp.com</li>
+        <li>Select the group from which you want to export contacts.</li>
+        <li>Click Export</li>
+      </ol>
+      <p class="center" style="color:white;font-weight: bold;">Note: Export may take a while!</p>
+    </div>
+    <div style="height: 40px; overflow: hidden;">
+      <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;">
+        <path d="M0.00,92.27 C216.83,192.92 304.30,8.39 500.00,109.03 L500.00,0.00 L0.00,0.00 Z"
+          style="stroke: none;fill: #1D9C5B;"></path>
+      </svg>
+    </div>
+
+
+    <div class="container">
+      <div class="selectedGroupWrapper">
+        <label for="groupName">Selected Group: </label>
+        <p class="center" id="groupName" style="display: inline-block;"></p>
+      </div>
+      <select name="exportType" id="exportType">
+        <option value="instant-export-unknown-numbers">Export Unknown Numbers Only (Instant)</option>
+        <option value="export-all-with-probable-names">Export All Contacts with Names (Slow)</option>
+      </select>
+      <button class="center" id="WAXP_EXPORT" disabled title="Export Contacts as CSV">Export Contacts</button>
+      <button class="hidden center stop" id="stopButton" title="Stop execution">Stop Exporting</button>
+      <br>
+      <fieldset class="hidden">
+        <legend>More Options</legend>
+        <label for="autoScroll">AutoScroll</label>
+        <input type="checkbox" id="autoScroll" checked>
+        <br>
+        <label for="scrollInterval">Scroll Interval</label>
+        <input type="number" id="scrollInterval" placeholder="3000" step="500" min="500">
+        <br>
+        <label for="scrollInterval">Scroll Increment</label>
+        <input type="number" id="scrollInterval" placeholder="400" step="50" min="100" max="1000">
+      </fieldset>
+
+    </div>
+  </div>
+<!-- PAGE 1 End -->
+
+<!-- PAGE 2 Start -->
+  <div id="page2Content" class="hidden page2">
+    <div style="height: 40px; overflow: hidden;">
+      <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;">
+        <path d="M0.00,92.27 C216.83,192.92 304.30,8.39 500.00,109.03 L500.00,0.00 L0.00,0.00 Z"
+          style="stroke: none;fill: #1D9C5B;"></path>
+      </svg>
+    </div>
+    <div class="container">
+      <ol>
+        <li><a href='#'>How to save contacts to Phone automatically?</a></li>
+        <li><a href='#'>Instant method doesn't work when group members are typing</a></li>
+        <li><a href='#'>Exporting with names is too slow</a></li>
+        <li><a href='#'>Nothing works</a></li>
+      </ol>
+    </div>
+  </div>
+  <!-- PAGE 2 End -->
+
+<!-- PAGE 3 Start -->
+  <div id="page3Content" class="hidden about">
+     <div style="height: 40px; overflow: hidden;">
+      <svg viewBox="0 0 500 150" preserveAspectRatio="none" style="height: 100%; width: 100%;">
+        <path d="M0.00,92.27 C216.83,192.92 304.30,8.39 500.00,109.03 L500.00,0.00 L0.00,0.00 Z"
+          style="stroke: none;fill: #1D9C5B;"></path>
+      </svg>
+    </div>
+    <div class="container">
+      <p>
+        WhatsApp Group Contact Exporter is developed and maintained by <a href="https://codegena.com" target="_blank">codegena.com</a><br><br>
+        For any complaints, queries or feedbacks, write to shaneapen@codegena.com
+      </p>
+      <div class="center">
+        <h3>Disclaimer</h3>
+        <p>This is an unofficial enhancement for WhatsApp Web. WAXP do not promote any unethical activity, this is made just to automate and make work easier.</p>
+      </div>
+      
+    </div>
+  </div>
+<!-- PAGE 3 End -->
+
+  <footer>
+    <!-- <p class=center style="color:#949292">Made with ❤️ from 🇮🇳</p> -->
+  </footer>
   <script src="/js/popup.js"></script>
 </body>
 
