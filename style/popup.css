@@ -1,6 +1,8 @@
 html, body {
-   min-width: 300px;
-   min-height: 240px;
+    min-width: 300px;
+    min-height: 240px;
+    margin: 0;
+    padding: 0;
 }
 h1{
     font-weight: bold;
@@ -12,26 +14,34 @@ h1{
 button {
     width: 100%;
     padding: 10px;
-    background: #b7cbf1;
+    background: #004D40;
+    color: white;
     border: 0;
     border-radius: 5px;
     font-size: 15px;
+    font-weight: 500;
     display: block;
     cursor: pointer;
     outline: 0;
 }
 
 button:hover {
-    background: #89aff7;
+    background: #6f7776;
 }
-button.link {
-    color:#700;
+button.stop {
+    color: #e63c39;
     font-weight: bold;
-    background: none;
+    border: 2px solid #e6e6e6;
+    display: block;
+    padding: 5px 20px;
+    margin-top: 5px;
+    background: #ffffff;
+    font-size: 12px;
+    width: auto;
 }
 
 .selectedGroupWrapper{
-    background: #ddf3dd;
+    /* background: #ddf3dd; */
     text-align: center;
     padding: 5px;
     border-radius: 4px;
@@ -40,4 +50,21 @@ button.link {
 p#selectedGroup{
     font-size: 14px;
     font-weight: 700;
+}
+.container {
+    padding: 8px;
+}
+.block1 {
+    background: #1D9C5B;
+    color: white;
+    font-size: 14px;
+}
+fieldset {
+    border: 1px solid #aec5af;
+    border-radius: 5px;
+}
+fieldset legend {
+    text-align: center;
+    color: #1D9C5B;
+    font-weight: bold;
 }
