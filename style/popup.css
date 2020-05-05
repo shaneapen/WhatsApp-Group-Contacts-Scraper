@@ -31,13 +31,16 @@ button:hover {
 button.stop {
     color: #e63c39;
     font-weight: bold;
-    border: 2px solid #e6e6e6;
+    /* border: 2px solid #e6e6e6; */
     display: block;
     padding: 5px 20px;
     margin-top: 5px;
     background: #ffffff;
     font-size: 12px;
     width: auto;
+}
+button.stop:hover {
+    background: #f9e7e7;
 }
 
 .selectedGroupWrapper{
@@ -67,4 +70,26 @@ fieldset legend {
     text-align: center;
     color: #1D9C5B;
     font-weight: bold;
+}
+select {
+    display: block;
+    margin: 10px 0;
+    height: 30px;
+    width: 100%;
+    font-weight: 600;
+    outline: 0;
+}
+img.gear-icon {
+    top: 15px;
+    right: 15px;
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+img.gear-icon:hover {
+    opacity: 0.9;
+}
+.hidden {
+    display: none;
 }

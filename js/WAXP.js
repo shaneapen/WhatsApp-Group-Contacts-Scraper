@@ -6,7 +6,7 @@
 chrome.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {
         switch(message.type) {
-            case "startDefault":
+            case "export-all-with-probable-names":
                 function start(){
                     try {
                         WAXP.start();
@@ -15,10 +15,18 @@ chrome.runtime.onMessage.addListener(
                         setTimeout(start, 1000);
                     }
                 }
-                start()
+                start();
+                break;
+            case "instant-export-unknown-numbers":
+                WAXP.download_Unknown_Numbers_Only();
+                break;
+            case "stopAutoScroll":
+                WAXP.stop();
+                break;
             case "currentGroup":
-                if(document.querySelectorAll("#main > header span")[1].title) sendResponse(document.querySelectorAll("#main > header span")[1].title);
-                else sendResponse('');
+                if(document.querySelectorAll("#main > header span")[1]) 
+                    sendResponse(document.querySelectorAll("#main > header span")[1].title)
+                else sendResponse('')
             break;
         }
     }
@@ -171,18 +179,33 @@ WAXP = (function(){
             // replacing any double quotes within the text to single quotes
             data += `"${MEMBERS_QUEUE[key][0]}","${key}","${MEMBERS_QUEUE[key][1].replace(/\"/g,"'")}"\n`;
         }
-        var a = document.createElement('a');
-        a.style.display = "none";
+        utils.createDownloadLink(data,name);
+    }
 
-        var url = window.URL.createObjectURL(new Blob([data], {
-            type: "data:attachment/text"
-        }));
-        a.setAttribute("href", url);
-        a.setAttribute("download", name);
-        document.body.append(a);
-        a.click();
-        window.URL.revokeObjectURL(url);
-        a.remove();
+    var download_Unknown_Numbers_Only = function(){
+
+        var members = document.querySelectorAll("#main > header span")[2].title.replace(/ /g,'').split(','), unSavedContacts;
+        for (i=0; i < members.length ;++i){
+            if(!members[i].match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/)) continue;
+            else{
+                unSavedContacts = members.splice(i);
+                break;
+            }
+        }
+        unSavedContacts.pop(); //removing 'YOU' from array
+
+        if(unSavedContacts.length > 0){
+            var groupName = document.querySelectorAll("#main > header span")[1].title;
+            var fileName = groupName.replace(/[^\d\w\s]/g,'') ? groupName.replace(/[^\d\w\s]/g,'') : 'WAXP-group-members';
+
+            var name = `${fileName}.csv`, data = "Phone Number\n";
+            for (i in unSavedContacts) {
+                data += `${unSavedContacts[i]}\n`;
+            }   
+            utils.createDownloadLink(data,name);
+        }else{
+            alert('No unsaved numbers exists in this group');
+        }
     }
 
     /**
@@ -198,12 +221,26 @@ WAXP = (function(){
                     return true;
                 return false;
            },
-           queueLength: function () {
+           queueLength: function() {
                var size = 0, key;
                for (key in MEMBERS_QUEUE) {
                    if (MEMBERS_QUEUE.hasOwnProperty(key)) size++;
                }
                return size;
+           },
+           createDownloadLink: function (data,name) {
+               var a = document.createElement('a');
+               a.style.display = "none";
+
+               var url = window.URL.createObjectURL(new Blob([data], {
+                   type: "data:attachment/text"
+               }));
+               a.setAttribute("href", url);
+               a.setAttribute("download", name);
+               document.body.append(a);
+               a.click();
+               window.URL.revokeObjectURL(url);
+               a.remove();
            }
         }
     })();
@@ -235,7 +272,10 @@ WAXP = (function(){
                 AUTO_SCROLL = false;
                 start();
             },
-            downloadCSV: function(){
+            download_Unknown_Numbers_Only: function(){
+                download_Unknown_Numbers_Only()
+            },
+            download_All_Contacts_With_Names: function(){
                 downloadAsCSV()
             },
             debug: function(){
