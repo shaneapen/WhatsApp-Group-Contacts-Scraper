@@ -3,9 +3,9 @@ const btnExport = document.getElementById("WAXP_EXPORT");
 document.addEventListener('click', function(e) {
     switch(e.target.id){
         case "WAXP_EXPORT":
-            var exportType = document.getElementById('exportType').value;
-            sendMessageToWAXP(exportType);
-            if(exportType == 'export-all-with-probable-names')
+            var configOptions = getConfigOptions();
+            sendMessageToWAXP(JSON.stringify(configOptions));
+            if(configOptions.EXPORT_TYPE == 'export-all-with-probable-names')
                 document.getElementById('stopButton').classList.toggle('hidden');
             break;
         case "stopButton":
@@ -13,7 +13,7 @@ document.addEventListener('click', function(e) {
             document.getElementById('stopButton').classList.toggle('hidden');
             break;
         case "gearIcon":
-            document.getElementsByTagName("fieldset")[0].classList.toggle("hidden");
+            document.getElementById('moreOptions').classList.toggle("hidden");
             break;
         case "page1":
             addActiveClass('page1');
@@ -26,6 +26,17 @@ document.addEventListener('click', function(e) {
             break;
     }
 });
+
+function getConfigOptions(){
+    return {
+        'EXPORT_TYPE': document.getElementById('exportType').value,
+        'UNKNOWN_CONTACTS_ONLY': document.getElementById('unknownContactsOnly').checked,
+        'NAME_PREFIX': document.getElementById('namePrefix').value
+        // 'AUTO_SCROLL': document.getElementById('autoScroll').checked,
+        // 'SCROLL_INTERVAL_CONSTANT': document.getElementById('scrollInterval').value,
+        // 'SCROLL_INCREMENT': document.getElementById('scrollIncrement').value
+    }
+}
 
 function addActiveClass(id){
     var ids = ['page1','page2','page3'];

@@ -5,29 +5,25 @@
 
 chrome.runtime.onMessage.addListener(
     function(message, sender, sendResponse) {
-        switch(message.type) {
-            case "export-all-with-probable-names":
-                function start(){
-                    try {
-                        WAXP.start();
-                    } catch (error) {
-                        console.log(error,'\nRETRYING in 1 second')
-                        setTimeout(start, 1000);
-                    }
-                }
-                start();
-                break;
-            case "instant-export-unknown-numbers":
-                WAXP.download_Unknown_Numbers_Only();
-                break;
-            case "stopAutoScroll":
-                WAXP.stop();
-                break;
-            case "currentGroup":
-                if(document.querySelectorAll("#main > header span")[1]) 
-                    sendResponse(document.querySelectorAll("#main > header span")[1].title)
-                else sendResponse('')
-            break;
+
+        if(message.type == 'currentGroup'){
+            if(document.querySelectorAll("#main > header span")[1]) sendResponse(document.querySelectorAll("#main > header span")[1].title)
+            else sendResponse('');
+        }else if(message.type == 'stopAutoScroll'){
+            WAXP.stop();
+        }else{
+            var config = JSON.parse(message.type);
+            WAXP.options.UNKNOWN_CONTACTS_ONLY = config.UNKNOWN_CONTACTS_ONLY;
+            WAXP.options.NAME_PREFIX = config.NAME_PREFIX;
+            
+            switch(config.EXPORT_TYPE) {
+                case "export-all-with-probable-names":
+                    WAXP.start();
+                    break;
+                case "instant-export-unknown-numbers":
+                    WAXP.quickExport();
+                    break;
+            }
         }
     }
 );
@@ -38,7 +34,9 @@ WAXP = (function(){
 
     var SCROLL_INTERVAL_CONSTANT = 3000, 
         SCROLL_INCREMENT = 450, 
-        AUTO_SCROLL = true, 
+        AUTO_SCROLL = true,
+        NAME_PREFIX = '',
+        UNKNOWN_CONTACTS_ONLY = false, 
         MEMBERS_QUEUE = {},
         TOTAL_MEMBERS;
 
@@ -81,7 +79,7 @@ WAXP = (function(){
 
     
     /**
-     * @description Function to autoscroll the div
+     *  Function to autoscroll the div
      */
 
     var autoScroll = function (){
@@ -92,31 +90,40 @@ WAXP = (function(){
     };
 
     /**
-     * @description Stops the current scrape instance
+     *  Stops the current scrape instance
      */
 
     var stop = function(){
         window.clearInterval(scrollInterval);
         observer.disconnect();
         console.log(`%c Extracted [${utils.queueLength()} / ${TOTAL_MEMBERS}] Members. Starting Download..`,`font-size:13px;color:white;background:green;border-radius:10px;`)
-        downloadAsCSV()
+        downloadAsCSV(['Name','Phone','Status']);
     }
 
     /**
-     * @description Function to scrape member data
+     *  Function to scrape member data
      */
     var scrapeData = function () {
-        var phone, status, name;
+        var contact, status, name;
         var memberCard = membersList.querySelectorAll(':scope > div');
 
         for (let i = 0; i < memberCard.length; i++) {
 
             status = memberCard[i].querySelectorAll('span[title]')[1] ? memberCard[i].querySelectorAll('span[title]')[1].title : "";
-            phone = scrapePhoneNum(memberCard[i]);
+            contact = scrapePhoneNum(memberCard[i]);
             name = scrapeName(memberCard[i]);
 
-            if (phone!='NIL' && !MEMBERS_QUEUE[phone]) {
-                MEMBERS_QUEUE[phone] = [name, status];
+            if (contact.phone!='NIL' && !MEMBERS_QUEUE[contact.phone]) {
+
+                if (contact.isUnsaved) {
+                    MEMBERS_QUEUE[contact.phone] = { 'Name': NAME_PREFIX + name,'Status': status };
+                    continue;
+                } else if (!UNKNOWN_CONTACTS_ONLY) {
+                    MEMBERS_QUEUE[contact.phone] = { 'Name': name, 'Status': status };
+                }
+
+            }else if(MEMBERS_QUEUE[contact.phone]){
+                MEMBERS_QUEUE[contact.phone].Status = status;
             }
 
             if(utils.queueLength() >= TOTAL_MEMBERS) {
@@ -129,24 +136,29 @@ WAXP = (function(){
     }
 
     /**
-     * @description scrapes phone no from html node
+     * Scrapes phone no from html node
      * @param {object} el - HTML node
      * @returns {string} - phone number without special chars
      */
 
     var scrapePhoneNum = function(el){
-        var phone;
+        var phone, isUnsaved = false;
         if (el.querySelector('img') && el.querySelector('img').src.match(/u=[0-9]*/)) {
            phone = el.querySelector('img').src.match(/u=[0-9]*/)[0].substring(2).replace(/[+\s]/g, '');
         } else {
            var temp = el.querySelector('span[title]').getAttribute('title').match(/(.?)*[0-9]{3}$/);
-           phone = temp ? temp[0].replace(/\D/g,'') : 'NIL';
+           if(temp){
+               phone = temp[0].replace(/\D/g,'');
+               isUnsaved = true;
+           }else{
+               phone = 'NIL';
+           }
         }
-        return phone;
+        return { 'phone': phone, 'isUnsaved': isUnsaved };
     }
     
     /**
-     * @description Scrapes name from HTML node
+     *  Scrapes name from HTML node
      * @param {object} el - HTML node
      * @returns {string} - returns name..if no name is present phone number is returned
      */
@@ -155,62 +167,81 @@ WAXP = (function(){
         var expectedName;
         expectedName = el.firstChild.firstChild.childNodes[1].childNodes[1].childNodes[1].querySelector('span').innerText;
         if(expectedName == ""){
-            return el.querySelector('span[title]').getAttribute('title');
+            return el.querySelector('span[title]').getAttribute('title'); //phone number
         }
         return expectedName;
     }
 
 
     /**
-     * @description A utility function to download the result as CSV file
+     * A utility function to download the result as CSV file
      * @References
      * [1] - https://stackoverflow.com/questions/4617935/is-there-a-way-to-include-commas-in-csv-columns-without-breaking-the-formatting
      * 
      */
-    var downloadAsCSV = function () {
+    var downloadAsCSV = function (header) {
 
         var groupName = document.querySelectorAll("#main > header span")[1].title;
         var fileName = groupName.replace(/[^\d\w\s]/g,'') ? groupName.replace(/[^\d\w\s]/g,'') : 'WAXP-group-members';
 
-        var name = `${fileName}.csv`, data = "Name,Phone,Status\n";
+        var name = `${fileName}.csv`, data = `${header.join(',')}\n`;
 
-        for (key in MEMBERS_QUEUE) {
-            // Wrapping each variable around double quotes to prevent commas in the string from adding new cols in CSV
-            // replacing any double quotes within the text to single quotes
-            data += `"${MEMBERS_QUEUE[key][0]}","${key}","${MEMBERS_QUEUE[key][1].replace(/\"/g,"'")}"\n`;
-        }
-        utils.createDownloadLink(data,name);
-    }
+        if(utils.queueLength() > 0){
 
-    var download_Unknown_Numbers_Only = function(){
-
-        var members = document.querySelectorAll("#main > header span")[2].title.replace(/ /g,'').split(','), unSavedContacts;
-        for (i=0; i < members.length ;++i){
-            if(!members[i].match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/)) continue;
-            else{
-                unSavedContacts = members.splice(i);
-                break;
+            for (key in MEMBERS_QUEUE) {
+                // Wrapping each variable around double quotes to prevent commas in the string from adding new cols in CSV
+                // replacing any double quotes within the text to single quotes
+                if(header.includes('Status'))
+                    data += `"${MEMBERS_QUEUE[key]['Name']}","${key}","${MEMBERS_QUEUE[key]['Status'].replace(/\"/g,"'")}"\n`;
+                else
+                    data += `"${MEMBERS_QUEUE[key]['Name']}","${key}"\n`;
             }
-        }
-        unSavedContacts.pop(); //removing 'YOU' from array
-
-        if(unSavedContacts.length > 0){
-            var groupName = document.querySelectorAll("#main > header span")[1].title;
-            var fileName = groupName.replace(/[^\d\w\s]/g,'') ? groupName.replace(/[^\d\w\s]/g,'') : 'WAXP-group-members';
-
-            var name = `${fileName}.csv`, data = "Phone Number\n";
-            for (i in unSavedContacts) {
-                data += `${unSavedContacts[i]}\n`;
-            }   
             utils.createDownloadLink(data,name);
+            
         }else{
-            alert('No unsaved numbers exists in this group');
+            alert("Couldn't find any contacts with the given options");
         }
+
+        
+        
     }
 
     /**
-     * @description Helper functions
-     * @references [1] https://stackoverflow.com/questions/53158796/get-scroll-position-with-reactjs/53158893#53158893
+     *  Scrape contacts instantly from the group header.
+     *  Saved Contacts cannot be exchanged for numbers with this method.
+     */
+
+    var quickExport = function(){
+
+        var members = document.querySelectorAll("#main > header span")[2].title.replace(/ /g,'').split(',');
+        var groupName = document.querySelectorAll("#main > header span")[1].title;
+        var fileName = groupName.replace(/[^\d\w\s]/g,'') ? groupName.replace(/[^\d\w\s]/g,'') : 'WAXP-group-members';
+        
+        fileName = `${fileName}.csv`;
+        members.pop(); //removing 'YOU' from array
+
+        MEMBERS_QUEUE = {};
+
+        for (i = 0; i < members.length; ++i) {
+            if (members[i].match(/^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/)) {
+                MEMBERS_QUEUE[members[i]] = {
+                    'Name': NAME_PREFIX + members[i]
+                };
+                continue;
+            } else if (!UNKNOWN_CONTACTS_ONLY) {
+                MEMBERS_QUEUE[members[i]] = {
+                    'Name': members[i]
+                };
+            }
+        }
+        
+        downloadAsCSV(['Name','Phone']);
+
+    }
+
+    /**
+     *  Helper functions
+     *  @References [1] https://stackoverflow.com/questions/53158796/get-scroll-position-with-reactjs/53158893#53158893
      */
 
     var utils = (function(){
@@ -228,7 +259,7 @@ WAXP = (function(){
                }
                return size;
            },
-           createDownloadLink: function (data,name) {
+           createDownloadLink: function (data,fileName) {
                var a = document.createElement('a');
                a.style.display = "none";
 
@@ -236,7 +267,7 @@ WAXP = (function(){
                    type: "data:attachment/text"
                }));
                a.setAttribute("href", url);
-               a.setAttribute("download", name);
+               a.setAttribute("download", fileName);
                document.body.append(a);
                a.click();
                window.URL.revokeObjectURL(url);
@@ -248,49 +279,41 @@ WAXP = (function(){
    
     // Defines the WAXP interface following module pattern
     return {
-            start: function(config){
-                MEMBERS_QUEUE = {}; //reset
-              
-                if(config == undefined){
-                    console.log("%cExtraction started with default options..%c ",'font-size:20px;',  'font-size:25px;background:url(https://i.gifer.com/ZlXo.gif) no-repeat; background-size:contain;display:flex;vertical-align:text-top');
-                }else if (typeof config == 'object'){
-                    // didn't use ternary op since the else part isn't used
-                    if(config.AUTO_SCROLL != undefined) AUTO_SCROLL = config.AUTO_SCROLL;
-                    if(config.SCROLL_INCREMENT != undefined) SCROLL_INCREMENT = config.SCROLL_INCREMENT;
-                    if(config.SCROLL_INTERVAL_CONSTANT != undefined) SCROLL_INTERVAL_CONSTANT = config.SCROLL_INTERVAL_CONSTANT;
-                    console.log("%cExtraction started with given options..%c ",'font-size:20px;',  'font-size:25px;background:url(https://i.gifer.com/ZlXo.gif) no-repeat; background-size:contain;display:flex;vertical-align:text-top');
-                }else{
-                    console.log("%cInvalid options..Extraction started with default options instead..%c ",'font-size:20px;',  'font-size:25px;background:url(https://i.gifer.com/ZlXo.gif) no-repeat; background-size:contain;display:flex;vertical-align:text-top');
-                }
-                start()
+            start: function(){
+                 MEMBERS_QUEUE = {}; //reset
+                 try {
+                     start();
+                 } catch (error) {
+                     //TO overcome below error..but not sure of any sideeffects
+                     //TypeError: Failed to execute 'observe' on 'MutationObserver': parameter 1 is not of type 'Node'.
+                     console.log(error, '\nRETRYING in 1 second')
+                     setTimeout(start, 1000);
+                 }
             },
             stop: function(){
                 stop()
             },
-            resumeManually: function(){
-                //resume starts without resetting the MEMBERS_QUEUE
-                AUTO_SCROLL = false;
-                start();
+            options: {
+                // works for now...but consider refactoring it provided better approach exist
+                set NAME_PREFIX(val){ NAME_PREFIX = val },
+                set SCROLL_INTERVAL(val){ SCROLL_INTERVAL_CONSTANT = val },
+                set SCROLL_INCREMENT(val){ SCROLL_INCREMENT = val },
+                set AUTO_SCROLL(val){ AUTO_SCROLL = val },
+                set UNKNOWN_CONTACTS_ONLY(val){ UNKNOWN_CONTACTS_ONLY = val },
+                // getter
+                get NAME_PREFIX(){ return NAME_PREFIX },
+                get SCROLL_INTERVAL(){ return SCROLL_INTERVAL_CONSTANT },
+                get SCROLL_INCREMENT(){ return SCROLL_INCREMENT },
+                get AUTO_SCROLL(){ return AUTO_SCROLL },
+                get UNKNOWN_CONTACTS_ONLY(){ return UNKNOWN_CONTACTS_ONLY },     
             },
-            download_Unknown_Numbers_Only: function(){
-                download_Unknown_Numbers_Only()
-            },
-            download_All_Contacts_With_Names: function(){
-                downloadAsCSV()
+            quickExport: function(){
+                quickExport();
             },
             debug: function(){
                 return {
                     size: utils.queueLength(),
-                    q: MEMBERS_QUEUE,
-                    globals: function(){
-                        // Show the current global variables
-                      console.log({
-                        'SCROLL_INTERVAL_CONSTANT': SCROLL_INTERVAL_CONSTANT,
-                        'SCROLL_INCREMENT': SCROLL_INCREMENT,
-                        'AUTO_SCROLL': AUTO_SCROLL,
-                        'TOTAL_MEMBERS': TOTAL_MEMBERS
-                        });
-                    }
+                    q: MEMBERS_QUEUE
                 }
             }
     }
