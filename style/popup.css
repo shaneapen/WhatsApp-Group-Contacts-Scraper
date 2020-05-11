@@ -1,0 +1,156 @@
+html, body {
+    min-width: 350px;
+    min-height: 240px;
+    margin: 0;
+    padding: 0;
+}
+h1{
+    font-weight: bold;
+    font-family: 'Open Sans', sans-serif;
+}
+.center{
+    margin: 0 auto;
+    text-align: center;
+}
+button {
+    max-width: 250px;
+    width: 100%;
+    padding: 10px;
+    background: #004D40;
+    color: white;
+    border: 0;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: 500;
+    display: block;
+    cursor: pointer;
+    outline: 0;
+}
+button:hover:enabled {
+    transform: translateY(-1px);
+    box-shadow: 0 7px 14px rgba(50, 50, 93, 0.1), 0 3px 6px rgba(0, 0, 0, 0.08);
+    opacity: 0.9;
+}
+button:disabled {
+    background: #6f7776;
+}
+
+button:disabled::before {
+    content: '🚫';
+}
+
+button.stop {
+    color: #e63c39;
+    font-weight: bold;
+    display: block;
+    padding: 5px 20px;
+    margin-top: 5px;
+    background: #ffffff;
+    font-size: 12px;
+    width: auto;
+}
+button.stop:hover {
+    background: #f9e7e7;
+}
+
+.selectedGroupWrapper{
+    /* background: #ddf3dd; */
+    text-align: center;
+    padding: 5px;
+    border-radius: 4px;
+    margin: 5px 0;
+}
+p#selectedGroup{
+    font-size: 14px;
+    font-weight: 700;
+}
+.container {
+    padding: 8px;
+}
+.greenBlock {
+    background: #1D9C5B;
+    color: white;
+    font-size: 14px;
+}
+fieldset {
+    border: 1px solid #aec5af;
+    border-radius: 5px;
+}
+fieldset legend {
+    text-align: center;
+    color: #1D9C5B;
+    font-weight: bold;
+}
+select {
+    max-width: 250px;
+    display: block;
+    margin: 10px auto;
+    height: 30px;
+    width: 100%;
+    font-weight: 600;
+    outline: 0;
+}
+img.gear-icon {
+    top: 15px;
+    right: 15px;
+    position: absolute;
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+img.gear-icon:hover {
+    opacity: 0.9;
+}
+.hidden {
+    display: none!important;
+}
+.tab-group {
+    display: table;
+    margin: 0 auto;
+    background: #E8F5E9;
+    padding: 3px;
+    border-radius: 4px;
+    margin-top: 8px;
+}
+button.tab {
+    background: none;
+    color: black;
+    width: auto;
+    display: inline-block;
+    margin: 1px;
+    font-size: 11px;
+    padding: 5px 10px;
+}
+button.tab.active {
+    background: #dadedc82;
+    color: #279B5D;
+    font-weight: bold;
+}
+
+/* About page */
+.about p {
+    max-width: 80%;
+    margin: 0 auto;
+    text-align: justify;
+    margin-bottom: 20px;
+}
+
+.page2 ol li {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+/* href tags */
+
+a {
+    text-decoration: none;
+    color: black;
+}
+a:hover, a.link-hover{
+    color: black;
+    border-bottom: 2px solid #279B5D;
+    box-shadow: inset 0px -6px 0px 0px #279b5d3b;
+}
+
+/* Buy me a coffee */
+.bmc-button img{height: 34px !important;width: 35px !important;margin-bottom: 1px !important;box-shadow: none !important;border: none !important;vertical-align: middle !important;}.bmc-button{padding: 7px 10px 7px 10px !important;line-height: 35px !important;height:51px !important;min-width:217px !important;text-decoration: none !important;display:inline-flex !important;color:#ffffff !important;background-color:#79D6B5 !important;border-radius: 5px !important;border: 1px solid transparent !important;padding: 7px 10px 7px 10px !important;font-size: 28px !important;letter-spacing:0.6px !important;box-shadow: 0px 1px 2px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;margin: 0 auto !important;font-family:'Cookie', cursive !important;-webkit-box-sizing: border-box !important;box-sizing: border-box !important;-o-transition: 0.3s all linear !important;-webkit-transition: 0.3s all linear !important;-moz-transition: 0.3s all linear !important;-ms-transition: 0.3s all linear !important;transition: 0.3s all linear !important;}.bmc-button:hover, .bmc-button:active, .bmc-button:focus {-webkit-box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;text-decoration: none !important;box-shadow: 0px 1px 2px 2px rgba(190, 190, 190, 0.5) !important;opacity: 0.85 !important;color:#ffffff !important;}
