@@ -13,14 +13,20 @@ chrome.runtime.onMessage.addListener(
             WAXP.stop();
         }else{
             var config = JSON.parse(message.type);
-            WAXP.options.UNKNOWN_CONTACTS_ONLY = config.UNKNOWN_CONTACTS_ONLY;
+            WAXP.options.SCROLL_INCREMENT = config.SCROLL_INCREMENT;
+            WAXP.options.SCROLL_INTERVAL_CONSTANT = config.SCROLL_INTERVAL_CONSTANT;
             WAXP.options.NAME_PREFIX = config.NAME_PREFIX;
             
             switch(config.EXPORT_TYPE) {
+                case "export-unknown-with-probable-names":
+                    WAXP.options.UNKNOWN_CONTACTS_ONLY = true;
+                    WAXP.start();
+                    break;
                 case "export-all-with-probable-names":
                     WAXP.start();
                     break;
                 case "instant-export-unknown-numbers":
+                    WAXP.options.UNKNOWN_CONTACTS_ONLY = true;
                     WAXP.quickExport();
                     break;
             }

@@ -5,7 +5,7 @@ document.addEventListener('click', function(e) {
         case "WAXP_EXPORT":
             var configOptions = getConfigOptions();
             sendMessageToWAXP(JSON.stringify(configOptions));
-            if(configOptions.EXPORT_TYPE == 'export-all-with-probable-names')
+            if(configOptions.EXPORT_TYPE != 'instant-export-unknown-numbers')
                 document.getElementById('stopButton').classList.toggle('hidden');
             break;
         case "stopButton":
@@ -30,11 +30,10 @@ document.addEventListener('click', function(e) {
 function getConfigOptions(){
     return {
         'EXPORT_TYPE': document.getElementById('exportType').value,
-        'UNKNOWN_CONTACTS_ONLY': document.getElementById('unknownContactsOnly').checked,
-        'NAME_PREFIX': document.getElementById('namePrefix').value
-        // 'AUTO_SCROLL': document.getElementById('autoScroll').checked,
-        // 'SCROLL_INTERVAL_CONSTANT': document.getElementById('scrollInterval').value,
-        // 'SCROLL_INCREMENT': document.getElementById('scrollIncrement').value
+        // 'UNKNOWN_CONTACTS_ONLY': document.getElementById('unknownContactsOnly').checked,
+        'NAME_PREFIX': document.getElementById('namePrefix').value,
+        'SCROLL_INTERVAL_CONSTANT': document.getElementById('scrollInterval').value,
+        'SCROLL_INCREMENT': document.getElementById('scrollIncrement').value
     }
 }
 

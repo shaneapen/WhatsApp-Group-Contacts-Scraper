@@ -43,25 +43,23 @@
         <p class="center" id="groupName" style="display: inline-block;"></p>
       </div>
       <select name="exportType" id="exportType">
-        <option value="instant-export-unknown-numbers">Export Numbers Only (Instant)</option>
-        <option value="export-all-with-probable-names">Export Contacts with Names & Status (Slow)</option>
+        <option value="instant-export-unknown-numbers">Export Non-saved Numbers Only (Instant)</option>
+        <option value="export-all-with-probable-names">Export All Contacts with Names & Status (Slow)</option>
+        <option value="export-unknown-with-probable-names">Export Non-saved Contacts with Names & Status (Slow)</option>
       </select>
       <button class="center" id="WAXP_EXPORT" disabled title="Export Contacts as CSV">Export Contacts</button>
       <button class="hidden center stop" id="stopButton" title="Stop execution">Stop Exporting</button>
       <br>
       <fieldset class="hidden" id="moreOptions">
         <legend>More Options</legend>
-        <label for="unknownContactsOnly">Export Unknown Contacts Only</label>
+        <!-- <label for="unknownContactsOnly">Export Unknown Contacts Only</label>
         <input type="checkbox" id="unknownContactsOnly">
-        <br>
-        <!-- <label for="autoScroll">AutoScroll</label>
-        <input type="checkbox" id="autoScroll" checked>
-        <br>
+        <br> -->
         <label for="scrollInterval">Scroll Interval</label>
         <input type="number" id="scrollInterval" placeholder="3000" step="500" min="500">
         <br>
         <label for="scrollIncrement">Scroll Increment</label>
-        <input type="number" id="scrollIncrement" placeholder="400" step="50" min="100" max="1000"><br> -->
+        <input type="number" id="scrollIncrement" placeholder="400" step="50" min="100" max="1000"><br>
         <label for="namePrefix">Name Prefix</label>
         <input type="text" id="namePrefix" placeholder="WA_" title="Given name will be prefixed to unsaved contacts">
       </fieldset>
