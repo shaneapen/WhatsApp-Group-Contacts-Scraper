@@ -13,10 +13,9 @@ chrome.runtime.onMessage.addListener(
             WAXP.stop();
         }else{
             var config = JSON.parse(message.type);
-            WAXP.options.SCROLL_INCREMENT = config.SCROLL_INCREMENT;
-            WAXP.options.SCROLL_INTERVAL_CONSTANT = config.SCROLL_INTERVAL_CONSTANT;
+            WAXP.options.SCROLL_INCREMENT = config.SCROLL_INCREMENT ? config.SCROLL_INCREMENT*1 : 400;
+            WAXP.options.SCROLL_INTERVAL = config.SCROLL_INTERVAL ? config.SCROLL_INTERVAL*1 : 3000;
             WAXP.options.NAME_PREFIX = config.NAME_PREFIX;
-            
             switch(config.EXPORT_TYPE) {
                 case "export-unknown-with-probable-names":
                     WAXP.options.UNKNOWN_CONTACTS_ONLY = true;
@@ -38,7 +37,7 @@ WAXP = (function(){
     
     MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
-    var SCROLL_INTERVAL_CONSTANT = 3000, 
+    var SCROLL_INTERVAL = 3000, 
         SCROLL_INCREMENT = 450, 
         AUTO_SCROLL = true,
         NAME_PREFIX = '',
@@ -51,7 +50,7 @@ WAXP = (function(){
     console.log("%c WhatsApp Group Contacts Exporter ","font-size:24px;font-weight:bold;color:white;background:green;");
 
     var start = function(){
-        
+
         membersList = document.querySelectorAll('span[title=You]')[0]?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode;
         header = document.getElementsByTagName('header')[0];
 
@@ -80,7 +79,7 @@ WAXP = (function(){
         header.nextSibling.scrollTop = 100;
         scrapeData();
 
-        if(AUTO_SCROLL) scrollInterval = setInterval(autoScroll, SCROLL_INTERVAL_CONSTANT);    
+        if(AUTO_SCROLL) scrollInterval = setInterval(autoScroll, SCROLL_INTERVAL);    
     }
 
     
@@ -302,13 +301,13 @@ WAXP = (function(){
             options: {
                 // works for now...but consider refactoring it provided better approach exist
                 set NAME_PREFIX(val){ NAME_PREFIX = val },
-                set SCROLL_INTERVAL(val){ SCROLL_INTERVAL_CONSTANT = val },
+                set SCROLL_INTERVAL(val){ SCROLL_INTERVAL = val },
                 set SCROLL_INCREMENT(val){ SCROLL_INCREMENT = val },
                 set AUTO_SCROLL(val){ AUTO_SCROLL = val },
                 set UNKNOWN_CONTACTS_ONLY(val){ UNKNOWN_CONTACTS_ONLY = val },
                 // getter
                 get NAME_PREFIX(){ return NAME_PREFIX },
-                get SCROLL_INTERVAL(){ return SCROLL_INTERVAL_CONSTANT },
+                get SCROLL_INTERVAL(){ return SCROLL_INTERVAL },
                 get SCROLL_INCREMENT(){ return SCROLL_INCREMENT },
                 get AUTO_SCROLL(){ return AUTO_SCROLL },
                 get UNKNOWN_CONTACTS_ONLY(){ return UNKNOWN_CONTACTS_ONLY },     

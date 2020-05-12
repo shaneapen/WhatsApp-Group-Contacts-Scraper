@@ -32,7 +32,7 @@ function getConfigOptions(){
         'EXPORT_TYPE': document.getElementById('exportType').value,
         // 'UNKNOWN_CONTACTS_ONLY': document.getElementById('unknownContactsOnly').checked,
         'NAME_PREFIX': document.getElementById('namePrefix').value,
-        'SCROLL_INTERVAL_CONSTANT': document.getElementById('scrollInterval').value,
+        'SCROLL_INTERVAL': document.getElementById('scrollInterval').value,
         'SCROLL_INCREMENT': document.getElementById('scrollIncrement').value
     }
 }
