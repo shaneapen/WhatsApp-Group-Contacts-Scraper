@@ -13,8 +13,8 @@ chrome.runtime.onMessage.addListener(
             WAXP.stop();
         }else{
             var config = JSON.parse(message.type);
-            WAXP.options.SCROLL_INCREMENT = config.SCROLL_INCREMENT ? config.SCROLL_INCREMENT*1 : 400;
-            WAXP.options.SCROLL_INTERVAL = config.SCROLL_INTERVAL ? config.SCROLL_INTERVAL*1 : 3000;
+            WAXP.options.SCROLL_INCREMENT = config.SCROLL_INCREMENT ? config.SCROLL_INCREMENT * 1 : WAXP.options.SCROLL_INCREMENT;
+            WAXP.options.SCROLL_INTERVAL = config.SCROLL_INTERVAL ? config.SCROLL_INTERVAL * 1 : WAXP.options.SCROLL_INTERVAL;
             WAXP.options.NAME_PREFIX = config.NAME_PREFIX;
             switch(config.EXPORT_TYPE) {
                 case "export-unknown-with-probable-names":
@@ -37,7 +37,7 @@ WAXP = (function(){
     
     MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
-    var SCROLL_INTERVAL = 3000, 
+    var SCROLL_INTERVAL = 1000, 
         SCROLL_INCREMENT = 450, 
         AUTO_SCROLL = true,
         NAME_PREFIX = '',
