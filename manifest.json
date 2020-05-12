@@ -1,12 +1,13 @@
 {
-   "name": "WAXP",
-   "version": "0.1",
+   "name": "WhatsApp Contacts Exporter by Codegena",
+   "short_name": "WAXP",
+   "version": "1.0",
    "manifest_version": 2,
    "description": "Export saved and unsaved contacts with names & status from WhatsApp groups for free.",
    "homepage_url": "https://codegena.com",
-   "icons": { "128": "/image/WA.png"},
+   "icons": { "128": "/image/WAXP.png"},
    "browser_action": {
-     "default_icon": "/image/WA.png",
+     "default_icon": "/image/WAXP.png",
      "default_title": "WAXP",
      "default_popup": "popup.html"
    },

@@ -91,12 +91,13 @@ select {
     outline: 0;
 }
 img.gear-icon {
-    top: 15px;
-    right: 15px;
-    position: absolute;
     height: 20px;
     width: 20px;
     cursor: pointer;
+    border-radius: 50px;
+    position: relative;
+    float: right;
+    bottom: 10px;
 }
 img.gear-icon:hover {
     opacity: 0.9;
