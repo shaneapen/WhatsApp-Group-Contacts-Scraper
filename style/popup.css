@@ -1,3 +1,7 @@
+
+  /* Plugin Styles */
+@import url('./fonts.css');
+
 html, body {
     width: 350px;
     min-height: 240px;
