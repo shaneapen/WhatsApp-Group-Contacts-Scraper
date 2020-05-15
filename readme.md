@@ -1,45 +1,14 @@
 ## WAXP - WhatsApp Group Contact Exporter
 
-### Instructions
-1. Open [WhatsApp Web](https://web.whatsapp.com) and open any group chat
-2. Copy-paste the script into the console
-3. Now run `WAXP.start()`
+### Running the extension in dev mode (Chrome)
+1. Clone the repo to your computer
+2. Go to `chrome://extensions/` and click `Load Unpacked`
+3. Select the cloned folder and the extension will now be visible.
 
-### `WAXP.start([optional config])`
-
-```
-const config = {
-    SCROLL_INTERVAL_CONSTANT = 1000, 
-    SCROLL_INCREMENT = 400, 
-    AUTO_SCROLL = true, 
-}
-
-WAXP.start(config);
-```
-### TO DO
-- Show the number of contacts whose phone number were not available..optionally push their details to the sheet
-- Create a chrome plugin
-
-## Bookmark Script
-**Script injection not possible inside Whatsapp Web**
-Go to bookmarks and add new page. Enter the following code in the URL field and save with any name.
-```
-javascript: (function(e, s) {
-    e.src = s;
-    e.onload = function() {
-        WAXP.start();
-    };
-    var k = document.head.querySelector('script:last-child');
-    if(!k.src.contains('WAXP.js')){
-        document.head.appendChild(e);
-    }
-})(document.createElement('script'), '//codegena.com/WAXP/WAXP.js')
-```
-### How to start Chrome extension *****
-
-In development mode, go to Chrome > Settings > More Tools > Extensions > "Developer mod" > Load unpacked >
-
-select the folder with the application > launch
+### Running the WAXP.js script directly (For easier development)
+1. Copy the WAXP function from `WAXP.js`
+2. Open Chrome dev tools in web.whatsapp.com and paste the script.
+3. Type `WAXP` to reveal the publically available functions.
 
 ### Note
 
