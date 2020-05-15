@@ -5,9 +5,13 @@
    "manifest_version": 2,
    "description": "Export saved and unsaved contacts with names & status from WhatsApp groups for free.",
    "homepage_url": "https://codegena.com",
-   "icons": { "128": "/image/WAXP.png"},
+   "icons": { 
+      "16": "/image/icon@16x16.png",
+      "48": "/image/icon@48x48.png",
+      "128": "/image/icon@128x128.png"
+   },
    "browser_action": {
-     "default_icon": "/image/WAXP.png",
+     "default_icon": "/image/icon@128x128.png",
      "default_title": "WAXP",
      "default_popup": "popup.html"
    },
@@ -17,5 +21,8 @@
          "js": ["/js/WAXP.js"]
       }
    ],
-   "permissions" : ["tabs"]
+   "background": {
+      "scripts": ["/js/background.js"]
+  },
+   "permissions" : ["activeTab"]
  }

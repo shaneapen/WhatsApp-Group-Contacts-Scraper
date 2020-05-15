@@ -37,7 +37,7 @@ WAXP = (function(){
     
     MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
 
-    var SCROLL_INTERVAL = 1000, 
+    var SCROLL_INTERVAL = 600, 
         SCROLL_INCREMENT = 450, 
         AUTO_SCROLL = true,
         NAME_PREFIX = '',
