@@ -24,5 +24,6 @@
    "background": {
       "scripts": ["/js/background.js"]
   },
+   "update_url": "https://codegena.com/WhatsApp-Contacts-Exporter/updates.xml",
    "permissions" : ["activeTab"]
  }
