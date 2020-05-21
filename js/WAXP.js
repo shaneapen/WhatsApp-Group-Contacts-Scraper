@@ -22,6 +22,7 @@ chrome.runtime.onMessage.addListener(
                     WAXP.start();
                     break;
                 case "export-all-with-probable-names":
+                    WAXP.options.UNKNOWN_CONTACTS_ONLY = false;
                     WAXP.start();
                     break;
                 case "instant-export-unknown-numbers":
