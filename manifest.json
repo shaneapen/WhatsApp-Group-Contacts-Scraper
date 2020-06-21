@@ -1,10 +1,10 @@
 {
-   "name": "WhatsApp Contacts Exporter by Codegena",
+   "name": "WhatsApp Group Contacts Exporter (WAXP)",
    "short_name": "WAXP",
-   "version": "1.0",
+   "version": "1.12",
    "manifest_version": 2,
    "description": "Export saved and unsaved contacts with names & status from WhatsApp groups for free.",
-   "homepage_url": "https://codegena.com",
+   "homepage_url": "https://codegena.com/WhatsApp-Contacts-Exporter/",
    "icons": { 
       "16": "/image/icon@16x16.png",
       "48": "/image/icon@48x48.png",
@@ -22,8 +22,8 @@
       }
    ],
    "background": {
-      "scripts": ["/js/background.js"]
+      "scripts": ["/js/background.js"],
+      "persistent": false
   },
-   "update_url": "https://codegena.com/WhatsApp-Contacts-Exporter/updates.xml",
    "permissions" : ["activeTab"]
  }
