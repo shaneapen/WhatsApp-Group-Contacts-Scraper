@@ -1,5 +1,7 @@
 ## WAXP - WhatsApp Group Contact Exporter
 
+You are invited to look through the code of this plugin. If you wish to use this code, you are advised to get a proper consent from the owner of this repository by contacting him.
+
 ### Running the extension in dev mode (Chrome)
 1. Clone the repo to your computer
 2. Go to `chrome://extensions/` and click `Load Unpacked`
