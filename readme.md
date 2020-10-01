@@ -16,3 +16,5 @@ This script uses optional chaining according to ECMAScript-262. [Learn more.](ht
 
 ## Disclaimer
 This is an unofficial enhancement for WhatsApp Web. WAXP do not promote any unethical activity, this is made just to automate and make work easier.
+
+Amazing Project
