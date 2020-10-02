@@ -57,7 +57,7 @@ WAXP = (function(){
 
         if(!membersList){
             document.querySelector("#main > header").firstChild.click();
-            membersList = document.querySelectorAll('span[title=You]')[0]?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode?.parentNode;
+            membersList = document.querySelectorAll('#app > div > div > div.YD4Yw > div._1-iDe._14VS3 > span > div > span > div > div > div._1TM40 > div:nth-child(5) > div:nth-child(2) > div')[0];
             header = document.getElementsByTagName('header')[0];
         }
 
