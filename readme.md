@@ -18,3 +18,15 @@ This script uses optional chaining according to ECMAScript-262. [Learn more.](ht
 
 ## Disclaimer
 This is an unofficial enhancement for WhatsApp Web. WAXP do not promote any unethical activity, this is made just to automate and make work easier.
+
+
+### Refund Policy
+
+The amount can be refunded only,
+
+1. If the WhatsApp Group Contact Exporter contains faults or defects that make it difficult to use, the customer is entitled to a complete refund.
+Our support assistance will double-check this.
+
+2. The user has the option of requesting a 50% refund or a 3-day error-fixing period to one week after purchase.
+
+3. After one week from the date of purchase, no refunds will be provided. 
